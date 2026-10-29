@@ -13,8 +13,24 @@ app = Flask(__name__, instance_relative_config=True)
 app.config["SECRET_KEY"] = os.environ.get(
     "SECRET_KEY", "chave-temporaria-trocar-em-producao"
 )
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+)
 os.makedirs(app.instance_path, exist_ok=True)
 DATABASE = os.path.join(app.instance_path, "ecogestao.db")
+
+STATUS_CLIENTE = ("Ativo", "Inativo")
+STATUS_COLETA = ("Agendada", "Concluída", "Cancelada")
+
+
+def data_valida(texto):
+    """Aceita apenas datas reais no formato AAAA-MM-DD."""
+    try:
+        date.fromisoformat(texto)
+        return True
+    except ValueError:
+        return False
 
 
 def conectar():
@@ -147,7 +163,7 @@ def clientes():
         status = request.form.get("status", "Ativo")
         if not nome or not telefone or not endereco:
             flash("Preencha nome, telefone e endereço.", "danger")
-        elif status not in ("Ativo", "Inativo"):
+        elif status not in STATUS_CLIENTE:
             flash("Situação de cliente inválida.", "danger")
         else:
             db.execute(
@@ -192,7 +208,9 @@ def coletas():
 
         if not cliente or not data_coleta or not tipo:
             flash("Selecione um cliente ativo e preencha data e resíduo.", "danger")
-        elif status not in ("Agendada", "Concluída", "Cancelada"):
+        elif not data_valida(data_coleta):
+            flash("Informe uma data de coleta válida.", "danger")
+        elif status not in STATUS_COLETA:
             flash("Status de coleta inválido.", "danger")
         else:
             db.execute(
@@ -230,19 +248,16 @@ def historico():
     clientes_lista = db.execute(
         "SELECT id, nome FROM clientes ORDER BY nome"
     ).fetchall()
+    consulta = """
+        SELECT coletas.*, clientes.nome AS cliente_nome
+        FROM coletas JOIN clientes ON clientes.id = coletas.cliente_id
+    """
+    parametros = ()
     if cliente_id:
-        lista = db.execute("""
-            SELECT coletas.*, clientes.nome AS cliente_nome
-            FROM coletas JOIN clientes ON clientes.id = coletas.cliente_id
-            WHERE clientes.id = ?
-            ORDER BY data_coleta DESC
-        """, (cliente_id,)).fetchall()
-    else:
-        lista = db.execute("""
-            SELECT coletas.*, clientes.nome AS cliente_nome
-            FROM coletas JOIN clientes ON clientes.id = coletas.cliente_id
-            ORDER BY data_coleta DESC
-        """).fetchall()
+        consulta += " WHERE clientes.id = ?"
+        parametros = (cliente_id,)
+    consulta += " ORDER BY data_coleta DESC, coletas.id DESC"
+    lista = db.execute(consulta, parametros).fetchall()
     return render_template(
         "historico.html", clientes=clientes_lista,
         coletas=lista, cliente_selecionado=cliente_id
