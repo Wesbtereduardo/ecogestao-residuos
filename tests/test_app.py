@@ -99,6 +99,32 @@ class TestColetas(EcoGestaoTestCase):
                     resposta.data,
                 )
 
+    def test_data_de_coleta_invalida_e_rejeitada(self):
+        self.entrar()
+        self.cadastrar_cliente()
+        for data in ["2026-13-45", "amanha", "31/10/2026"]:
+            with self.subTest(data=data):
+                resposta = self.registrar_coleta(data_coleta=data)
+                self.assertIn(
+                    "Informe uma data de coleta válida".encode(),
+                    resposta.data,
+                )
+
+
+class TestHistorico(EcoGestaoTestCase):
+    def test_historico_filtra_por_cliente(self):
+        self.entrar()
+        self.cadastrar_cliente(nome="Cliente Um")
+        self.cadastrar_cliente(nome="Cliente Dois")
+        self.registrar_coleta(cliente_id=1, tipo_residuo="Papel")
+        self.registrar_coleta(cliente_id=2, tipo_residuo="Vidro")
+        filtrado = self.client.get("/historico?cliente_id=2")
+        self.assertIn(b"Vidro", filtrado.data)
+        self.assertNotIn("<td>Papel</td>".encode(), filtrado.data)
+        todos = self.client.get("/historico")
+        self.assertIn(b"Vidro", todos.data)
+        self.assertIn(b"Papel", todos.data)
+
 
 class TestRelatorios(EcoGestaoTestCase):
     def test_relatorios_agrupam_por_status_e_residuo(self):
