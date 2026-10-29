@@ -71,7 +71,9 @@ def inicializar_banco():
     if not usuario:
         db.execute(
             "INSERT INTO usuarios (usuario, senha_hash) VALUES (?, ?)",
-            ("admin", generate_password_hash("EcoGestao@2026"))
+            ("admin", generate_password_hash(
+                os.environ.get("ADMIN_PASSWORD", "EcoGestao@2026")
+            ))
         )
     db.commit()
     db.close()
@@ -265,6 +267,16 @@ def relatorios():
     return render_template(
         "relatorios.html", por_status=por_status, por_residuo=por_residuo
     )
+
+
+@app.route("/saude")
+def saude():
+    """Verificação de saúde usada pelo monitoramento (não exige login)."""
+    try:
+        conectar().execute("SELECT 1").fetchone()
+    except sqlite3.Error:
+        return {"status": "erro", "banco": "indisponivel"}, 503
+    return {"status": "ok", "banco": "disponivel"}
 
 
 with app.app_context():
