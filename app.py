@@ -178,7 +178,7 @@ def coletas():
         status = request.form.get("status", "Agendada")
         try:
             quantidade = float(quantidade_texto) if quantidade_texto else None
-            if quantidade is not None and quantidade < 0:
+            if quantidade is not None and quantidade <= 0:
                 raise ValueError
         except ValueError:
             quantidade = None
