@@ -6,3 +6,6 @@ venv/
 instance/
 .env
 .pytest_cache/
+*.db
+*.sqlite3
+.vscode/
