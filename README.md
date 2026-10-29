@@ -65,3 +65,17 @@ Para executar os testes:
 ```powershell
 py -3.12 -m unittest discover -s tests -v
 ```
+
+## Publicação e monitoramento
+
+A aplicação é publicada no Render (plano gratuito) a partir deste repositório,
+com o comando de início `gunicorn app:app`.
+
+Variáveis de ambiente no servidor:
+
+- `SECRET_KEY`: chave secreta das sessões.
+- `ADMIN_PASSWORD`: senha da conta `admin` criada na primeira execução.
+
+A rota pública `/saude` responde `200` com `{"status": "ok"}` quando o banco
+está disponível e `503` quando não está. Ela é consultada a cada 5 minutos por
+um monitor externo, que alerta por e-mail se o serviço sair do ar.
