@@ -1,0 +1,42 @@
+
+{% extends "base.html" %}
+{% block title %}Painel Inicial | EcoGestão{% endblock %}
+{% block content %}
+<h1 class="mb-2">Painel de Controle</h1>
+<p class="text-muted">Acompanhe os principais dados da operação.</p>
+
+<div class="row g-3 mt-2">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card dashboard-card h-100"><div class="card-body">
+            <h2 class="h6 text-muted">Clientes</h2>
+            <p class="display-5">{{ total_clientes }}</p>
+            <a href="{{ url_for('clientes') }}">Ver clientes</a>
+        </div></div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card dashboard-card h-100"><div class="card-body">
+            <h2 class="h6 text-muted">Total de coletas</h2>
+            <p class="display-5">{{ total_coletas }}</p>
+            <a href="{{ url_for('coletas') }}">Ver coletas</a>
+        </div></div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card dashboard-card h-100"><div class="card-body">
+            <h2 class="h6 text-muted">Agendadas</h2>
+            <p class="display-5">{{ agendadas }}</p>
+        </div></div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card dashboard-card h-100"><div class="card-body">
+            <h2 class="h6 text-muted">Concluídas</h2>
+            <p class="display-5">{{ concluidas }}</p>
+        </div></div>
+    </div>
+</div>
+
+<div class="mt-4 d-flex flex-wrap gap-2">
+    <a class="btn btn-success" href="{{ url_for('clientes') }}">Cadastrar cliente</a>
+    <a class="btn btn-outline-success" href="{{ url_for('coletas') }}">Registrar coleta</a>
+    <a class="btn btn-outline-success" href="{{ url_for('relatorios') }}">Consultar relatórios</a>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+
+{% extends "base.html" %}
+{% block title %}Clientes | EcoGestão{% endblock %}
+{% block content %}
+<h1>Cadastro de clientes</h1>
+<p class="text-muted">Cadastre e consulte os clientes da empresa.</p>
+
+<div class="card mb-4">
+    <div class="card-header">Novo cliente</div>
+    <div class="card-body">
+        <form method="post">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="nome" class="form-label">Nome / Empresa *</label>
+                    <input id="nome" name="nome" class="form-control" required maxlength="150">
+                </div>
+                <div class="col-md-6">
+                    <label for="telefone" class="form-label">Telefone *</label>
+                    <input id="telefone" name="telefone" class="form-control" required maxlength="30">
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input id="email" name="email" type="email" class="form-control" maxlength="150">
+                </div>
+                <div class="col-md-6">
+                    <label for="endereco" class="form-label">Endereço *</label>
+                    <input id="endereco" name="endereco" class="form-control" required maxlength="250">
+                </div>
+                <div class="col-md-4">
+                    <label for="status" class="form-label">Situação</label>
+                    <select id="status" name="status" class="form-select">
+                        <option>Ativo</option>
+                        <option>Inativo</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-success mt-3" type="submit">Salvar cliente</button>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Clientes cadastrados</div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover mb-0">
+            <thead><tr><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Situação</th></tr></thead>
+            <tbody>
+            {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.nome }}</td>
+                    <td>{{ cliente.telefone }}</td>
+                    <td>{{ cliente.email or '-' }}</td>
+                    <td>{{ cliente.status }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4" class="text-center py-4">Nenhum cliente cadastrado.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

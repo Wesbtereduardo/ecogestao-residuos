@@ -1,0 +1,43 @@
+
+{% extends "base.html" %}
+{% block title %}Relatórios | EcoGestão{% endblock %}
+{% block content %}
+<h1>Relatórios básicos</h1>
+<p class="text-muted">Resumo das coletas registradas no sistema.</p>
+
+<div class="card mb-4">
+    <div class="card-header">Coletas por status</div>
+    <div class="table-responsive">
+        <table class="table table-striped mb-0">
+            <thead><tr><th>Status</th><th>Total de coletas</th></tr></thead>
+            <tbody>
+            {% for item in por_status %}
+                <tr><td>{{ item.status }}</td><td>{{ item.total }}</td></tr>
+            {% else %}
+                <tr><td colspan="2">Ainda não existem coletas para contabilizar.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Coletas por tipo de resíduo</div>
+    <div class="table-responsive">
+        <table class="table table-striped mb-0">
+            <thead><tr><th>Tipo de resíduo</th><th>Registros</th><th>Quantidade total (kg)</th></tr></thead>
+            <tbody>
+            {% for item in por_residuo %}
+                <tr>
+                    <td>{{ item.tipo_residuo }}</td>
+                    <td>{{ item.total }}</td>
+                    <td>{{ "%.2f"|format(item.quantidade_total) }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="3">Ainda não existem coletas para contabilizar.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

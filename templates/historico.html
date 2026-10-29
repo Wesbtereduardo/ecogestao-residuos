@@ -1,0 +1,43 @@
+
+{% extends "base.html" %}
+{% block title %}Histórico | EcoGestão{% endblock %}
+{% block content %}
+<h1>Histórico de coletas</h1>
+<p class="text-muted">Consulte os serviços registrados por cliente.</p>
+
+<form method="get" class="card card-body mb-4">
+    <label for="cliente_id" class="form-label">Filtrar por cliente</label>
+    <div class="d-flex flex-wrap gap-2">
+        <select id="cliente_id" name="cliente_id" class="form-select" style="max-width: 450px;">
+            <option value="">Todos os clientes</option>
+            {% for cliente in clientes %}
+            <option value="{{ cliente.id }}" {% if cliente_selecionado == cliente.id %}selected{% endif %}>{{ cliente.nome }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-success" type="submit">Consultar</button>
+        <a href="{{ url_for('historico') }}" class="btn btn-outline-secondary">Limpar filtro</a>
+    </div>
+</form>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-striped mb-0">
+            <thead><tr><th>Data</th><th>Cliente</th><th>Resíduo</th><th>Quantidade (kg)</th><th>Status</th><th>Observações</th></tr></thead>
+            <tbody>
+            {% for coleta in coletas %}
+                <tr>
+                    <td>{{ coleta.data_coleta }}</td>
+                    <td>{{ coleta.cliente_nome }}</td>
+                    <td>{{ coleta.tipo_residuo }}</td>
+                    <td>{{ coleta.quantidade if coleta.quantidade is not none else '-' }}</td>
+                    <td>{{ coleta.status }}</td>
+                    <td>{{ coleta.observacoes or '-' }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6" class="text-center py-4">Nenhum registro encontrado.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

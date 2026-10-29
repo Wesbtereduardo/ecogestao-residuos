@@ -1,0 +1,49 @@
+
+body {
+    background-color: #f5f8f5;
+    color: #243328;
+}
+
+.navbar-brand {
+    letter-spacing: 0.2px;
+}
+
+.card {
+    border: 1px solid #e0e9e1;
+    border-radius: 12px;
+}
+
+.card-header {
+    background-color: #edf5ee;
+    font-weight: 600;
+}
+
+.dashboard-card {
+    border-top: 4px solid #198754;
+}
+
+.dashboard-card .display-5 {
+    color: #198754;
+    font-weight: 700;
+}
+
+.table th {
+    white-space: nowrap;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.btn:focus-visible,
+a:focus-visible {
+    outline: 2px solid #198754;
+    outline-offset: 2px;
+}
+
+footer {
+    font-size: 0.9rem;
+}

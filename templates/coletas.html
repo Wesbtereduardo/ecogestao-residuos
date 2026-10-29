@@ -1,0 +1,82 @@
+
+{% extends "base.html" %}
+{% block title %}Coletas | EcoGestão{% endblock %}
+{% block content %}
+<h1>Registro de coletas</h1>
+<p class="text-muted">Agende e acompanhe os serviços de coleta.</p>
+
+<div class="card mb-4">
+    <div class="card-header">Nova coleta</div>
+    <div class="card-body">
+        <form method="post">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="cliente_id" class="form-label">Cliente *</label>
+                    <select id="cliente_id" name="cliente_id" class="form-select" required>
+                        <option value="">Selecione um cliente</option>
+                        {% for cliente in clientes %}
+                        <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="data_coleta" class="form-label">Data da coleta *</label>
+                    <input id="data_coleta" name="data_coleta" type="date" class="form-control" value="{{ hoje }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="tipo_residuo" class="form-label">Tipo de resíduo *</label>
+                    <select id="tipo_residuo" name="tipo_residuo" class="form-select" required>
+                        <option value="">Selecione</option>
+                        <option>Papel</option>
+                        <option>Papelão</option>
+                        <option>Plástico</option>
+                        <option>Metal</option>
+                        <option>Vidro</option>
+                        <option>Plástico Filme</option>
+                        <option>Outros</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="quantidade" class="form-label">Quantidade em kg</label>
+                    <input id="quantidade" name="quantidade" type="number" min="0" step="0.01" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label for="status" class="form-label">Status</label>
+                    <select id="status" name="status" class="form-select">
+                        <option>Agendada</option>
+                        <option>Concluída</option>
+                        <option>Cancelada</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label for="observacoes" class="form-label">Observações</label>
+                    <textarea id="observacoes" name="observacoes" class="form-control" rows="3" maxlength="1000"></textarea>
+                </div>
+            </div>
+            <button class="btn btn-success mt-3" type="submit">Registrar coleta</button>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Coletas registradas</div>
+    <div class="table-responsive">
+        <table class="table table-striped mb-0">
+            <thead><tr><th>Data</th><th>Cliente</th><th>Resíduo</th><th>Quantidade (kg)</th><th>Status</th></tr></thead>
+            <tbody>
+            {% for coleta in coletas %}
+                <tr>
+                    <td>{{ coleta.data_coleta }}</td>
+                    <td>{{ coleta.cliente_nome }}</td>
+                    <td>{{ coleta.tipo_residuo }}</td>
+                    <td>{{ coleta.quantidade if coleta.quantidade is not none else '-' }}</td>
+                    <td>{{ coleta.status }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5" class="text-center py-4">Nenhuma coleta registrada.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
