@@ -47,3 +47,108 @@ a:focus-visible {
 footer {
     font-size: 0.9rem;
 }
+
+/* ---------- Acessibilidade ---------- */
+.barra-acessibilidade {
+    background-color: #14532d;
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.skip-link:focus {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 2000;
+    padding: 0.5rem 1rem;
+    background: #ffffff;
+    color: #14532d;
+    border-radius: 6px;
+}
+
+#conteudo:focus {
+    outline: none;
+}
+
+.barra-acessibilidade .btn[aria-pressed="true"] {
+    background-color: #ffffff;
+    color: #14532d;
+}
+
+/* Modo de alto contraste (WCAG: contraste mínimo de 7:1) */
+html[data-contraste="alto"] body {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+html[data-contraste="alto"] a,
+html[data-contraste="alto"] .text-success,
+html[data-contraste="alto"] .dashboard-card .display-5 {
+    color: #ffeb3b !important;
+}
+
+html[data-contraste="alto"] .text-muted {
+    color: #ffffff !important;
+}
+
+html[data-contraste="alto"] .bg-success,
+html[data-contraste="alto"] .barra-acessibilidade {
+    background-color: #000000 !important;
+    border-bottom: 2px solid #ffffff;
+}
+
+html[data-contraste="alto"] .card,
+html[data-contraste="alto"] .card-header {
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+html[data-contraste="alto"] .dashboard-card {
+    border-top: 6px solid #ffeb3b;
+}
+
+html[data-contraste="alto"] .form-control,
+html[data-contraste="alto"] .form-select {
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+html[data-contraste="alto"] .btn-success,
+html[data-contraste="alto"] .btn-outline-success {
+    background-color: #ffeb3b;
+    border-color: #ffeb3b;
+    color: #000000;
+    font-weight: 700;
+}
+
+html[data-contraste="alto"] .btn-outline-secondary,
+html[data-contraste="alto"] .btn-outline-light {
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+html[data-contraste="alto"] .barra-acessibilidade .btn[aria-pressed="true"] {
+    background-color: #ffeb3b;
+    border-color: #ffeb3b;
+    color: #000000;
+}
+
+html[data-contraste="alto"] .table {
+    --bs-table-color: #ffffff;
+    --bs-table-bg: #000000;
+    --bs-table-striped-bg: #1a1a1a;
+    --bs-table-striped-color: #ffffff;
+    --bs-table-hover-bg: #333333;
+    --bs-table-hover-color: #ffffff;
+    --bs-table-border-color: #ffffff;
+}
+
+html[data-contraste="alto"] input:focus,
+html[data-contraste="alto"] select:focus,
+html[data-contraste="alto"] textarea:focus,
+html[data-contraste="alto"] .btn:focus-visible,
+html[data-contraste="alto"] a:focus-visible {
+    outline: 3px solid #ffeb3b;
+}
