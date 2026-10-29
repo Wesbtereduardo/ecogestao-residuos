@@ -57,3 +57,11 @@ O SQLite é inicializado automaticamente, e o arquivo do banco fica na pasta `in
 ## Observação
 
 Este projeto é um MVP acadêmico para a Experiência Prática 3 de Projeto de Software.
+
+## Testes automatizados
+
+Para executar os testes:
+
+```powershell
+py -3.12 -m unittest discover -s tests -v
+```
