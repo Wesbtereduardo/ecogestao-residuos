@@ -22,7 +22,7 @@
 <div class="card">
     <div class="table-responsive">
         <table class="table table-striped mb-0">
-            <thead><tr><th>Data</th><th>Cliente</th><th>Resíduo</th><th>Quantidade (kg)</th><th>Status</th><th>Observações</th></tr></thead>
+            <thead><tr><th>Data</th><th>Cliente</th><th>Resíduo</th><th>Quantidade (kg)</th><th>Nota fiscal</th><th>Status</th><th>Observações</th></tr></thead>
             <tbody>
             {% for coleta in coletas %}
                 <tr>
@@ -30,11 +30,12 @@
                     <td>{{ coleta.cliente_nome }}</td>
                     <td>{{ coleta.tipo_residuo }}</td>
                     <td>{{ coleta.quantidade if coleta.quantidade is not none else '-' }}</td>
+                    <td>{{ coleta.nota_fiscal or '-' }}</td>
                     <td>{{ coleta.status }}</td>
                     <td>{{ coleta.observacoes or '-' }}</td>
                 </tr>
             {% else %}
-                <tr><td colspan="6" class="text-center py-4">Nenhum registro encontrado.</td></tr>
+                <tr><td colspan="7" class="text-center py-4">Nenhum registro encontrado.</td></tr>
             {% endfor %}
             </tbody>
         </table>

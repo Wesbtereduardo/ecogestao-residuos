@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="quantidade" class="form-label">Quantidade em kg</label>
-                    <input id="quantidade" name="quantidade" type="number" min="0.01" step="0.01" class="form-control">
+                    <input id="quantidade" name="quantidade" type="number" min="0" step="0.01" class="form-control">
                 </div>
                 <div class="col-md-6">
                     <label for="status" class="form-label">Status</label>
@@ -47,6 +47,11 @@
                         <option>Concluída</option>
                         <option>Cancelada</option>
                     </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="nota_fiscal" class="form-label">Nota fiscal</label>
+                    <input id="nota_fiscal" name="nota_fiscal" type="text" maxlength="44" class="form-control" aria-describedby="ajuda-nota-fiscal" autocomplete="off">
+                    <div id="ajuda-nota-fiscal" class="form-text">Opcional. Número da nota ou chave de acesso (até 44 caracteres).</div>
                 </div>
                 <div class="col-12">
                     <label for="observacoes" class="form-label">Observações</label>
@@ -62,7 +67,7 @@
     <div class="card-header">Coletas registradas</div>
     <div class="table-responsive">
         <table class="table table-striped mb-0">
-            <thead><tr><th>Data</th><th>Cliente</th><th>Resíduo</th><th>Quantidade (kg)</th><th>Status</th></tr></thead>
+            <thead><tr><th>Data</th><th>Cliente</th><th>Resíduo</th><th>Quantidade (kg)</th><th>Nota fiscal</th><th>Status</th></tr></thead>
             <tbody>
             {% for coleta in coletas %}
                 <tr>
@@ -70,10 +75,11 @@
                     <td>{{ coleta.cliente_nome }}</td>
                     <td>{{ coleta.tipo_residuo }}</td>
                     <td>{{ coleta.quantidade if coleta.quantidade is not none else '-' }}</td>
+                    <td>{{ coleta.nota_fiscal or '-' }}</td>
                     <td>{{ coleta.status }}</td>
                 </tr>
             {% else %}
-                <tr><td colspan="5" class="text-center py-4">Nenhuma coleta registrada.</td></tr>
+                <tr><td colspan="6" class="text-center py-4">Nenhuma coleta registrada.</td></tr>
             {% endfor %}
             </tbody>
         </table>
