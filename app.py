@@ -1,5 +1,6 @@
 
 import os
+import re
 import sqlite3
 from functools import wraps
 from datetime import date
@@ -15,6 +16,9 @@ app.config["SECRET_KEY"] = os.environ.get(
 )
 os.makedirs(app.instance_path, exist_ok=True)
 DATABASE = os.path.join(app.instance_path, "ecogestao.db")
+
+# Número da nota fiscal (até 9 dígitos) ou chave de acesso da NF-e (44 dígitos).
+NOTA_FISCAL_PADRAO = re.compile(r"[0-9A-Za-z./-]{1,44}")
 
 
 def conectar():
@@ -59,11 +63,17 @@ def inicializar_banco():
             tipo_residuo TEXT NOT NULL,
             quantidade REAL,
             observacoes TEXT,
+            nota_fiscal TEXT,
             status TEXT NOT NULL DEFAULT 'Agendada'
                 CHECK (status IN ('Agendada', 'Concluída', 'Cancelada')),
             FOREIGN KEY (cliente_id) REFERENCES clientes(id)
         );
     """)
+    # Migração: bancos criados antes da nota fiscal ganham a nova coluna,
+    # preservando todos os registros existentes.
+    colunas = [linha[1] for linha in db.execute("PRAGMA table_info(coletas)")]
+    if "nota_fiscal" not in colunas:
+        db.execute("ALTER TABLE coletas ADD COLUMN nota_fiscal TEXT")
     # Conta inicial para o primeiro acesso.
     usuario = db.execute(
         "SELECT id FROM usuarios WHERE usuario = ?", ("admin",)
@@ -177,6 +187,7 @@ def coletas():
         tipo = request.form.get("tipo_residuo", "").strip()
         quantidade_texto = request.form.get("quantidade", "").strip()
         observacoes = request.form.get("observacoes", "").strip()
+        nota_fiscal = request.form.get("nota_fiscal", "").strip()
         status = request.form.get("status", "Agendada")
         try:
             quantidade = float(quantidade_texto) if quantidade_texto else None
@@ -196,14 +207,17 @@ def coletas():
             flash("Selecione um cliente ativo e preencha data e resíduo.", "danger")
         elif status not in ("Agendada", "Concluída", "Cancelada"):
             flash("Status de coleta inválido.", "danger")
+        elif nota_fiscal and not NOTA_FISCAL_PADRAO.fullmatch(nota_fiscal):
+            flash("Nota fiscal inválida: use até 44 caracteres "
+                  "(letras, números, ponto, barra ou hífen).", "danger")
         else:
             db.execute(
                 """INSERT INTO coletas
                    (cliente_id, data_coleta, tipo_residuo, quantidade,
-                    observacoes, status)
-                   VALUES (?, ?, ?, ?, ?, ?)""",
+                    observacoes, nota_fiscal, status)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
                 (cliente_id, data_coleta, tipo, quantidade,
-                 observacoes or None, status)
+                 observacoes or None, nota_fiscal or None, status)
             )
             db.commit()
             flash("Coleta registrada com sucesso!", "success")
